@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Carousel.scss';
+import Form from './Form';
 
 interface CarouselProp {
   images: string[];
@@ -12,40 +13,46 @@ interface CarouselProp {
 
 const Carousel: React.FC<CarouselProp> = ({
   images,
-  step,
-  frameSize,
-  itemWidth,
+  // step,
+  // frameSize,
+  // itemWidth,
   animationDuration,
   infinite,
 }) => {
-  const [current, setCurrent] = useState<number>(0);
+  const [currentPosition, setcurrentPosition] = useState<number>(0);
+
+  const [step, setStep] = useState<number>(3);
+  const [frameSize, setFrameSize] = useState<number>(3);
+  const [itemWidth, setItemWidth] = useState<number>(130);
 
   const checkNext = () => {
     if (infinite) {
-      if (current + step < images.length) {
-        setCurrent(current + step);
+      if (currentPosition + step < images.length) {
+        setcurrentPosition(currentPosition + step);
       } else {
-        // setCurrent(0 + step);
-        setCurrent((current + step) % images.length);
+        // setcurrentPosition(0 + step);
+        setcurrentPosition((currentPosition + step) % images.length);
       }
     } else {
-      if (current + step < images.length) {
-        setCurrent(current + step);
+      if (currentPosition + step < images.length) {
+        setcurrentPosition(currentPosition + step);
       }
     }
   };
 
   const checkPrev = () => {
     if (infinite) {
-      if (current - step >= 0) {
-        setCurrent(current - step);
+      if (currentPosition - step >= 0) {
+        setcurrentPosition(currentPosition - step);
       } else {
-        // setCurrent(images.length - step);
-        setCurrent((images.length + current - step) % images.length);
+        // setcurrentPosition(images.length - step);
+        setcurrentPosition(
+          (images.length + currentPosition - step) % images.length,
+        );
       }
     } else {
-      if (current - step >= 0) {
-        setCurrent(current - step);
+      if (currentPosition - step >= 0) {
+        setcurrentPosition(currentPosition - step);
       }
     }
   };
@@ -59,7 +66,7 @@ const Carousel: React.FC<CarouselProp> = ({
         <ul
           className="Carousel__list"
           style={{
-            transform: `translate(-${itemWidth * current}px)`,
+            transform: `translate(-${itemWidth * currentPosition}px)`,
             transition: `transform ${animationDuration}ms ease-in-out`,
           }}
         >
@@ -82,6 +89,12 @@ const Carousel: React.FC<CarouselProp> = ({
           </button>
         </div>
       </div>
+
+      <Form
+        onStep={setStep}
+        onItemWidth={setItemWidth}
+        onFrameSize={setFrameSize}
+      />
     </div>
   );
 };
